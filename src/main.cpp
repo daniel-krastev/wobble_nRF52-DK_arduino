@@ -3,12 +3,19 @@
 #include <BLEPeripheral.h>
 #include <Wire.h>
 #include "MMA7660.h"
-MMA7660 accelemeter;
+
+// If you change these, please change their respective values in the Flutter app.
+static const char * DEVICE_NAME = "Wobbly";
+static const char * SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+static const char * CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+
 long previousMillis = 0;
 unsigned char buff[9];
+
+MMA7660 accelemeter;
 BLEPeripheral blePeripheral = BLEPeripheral();
-BLEService bleService = BLEService("19b10000e8f2537e4f6cd104768a1214");
-BLECharacteristic bleCharacteristic = BLECharacteristic("19b10001e8f2537e4f6cd104768a1214", BLERead | BLENotify, 9);
+BLEService bleService = BLEService(SERVICE_UUID);
+BLECharacteristic bleCharacteristic = BLECharacteristic(CHAR_UUID, BLERead | BLENotify, 9);
 
 void updateAccData() {
   /* Read the current voltage level on the A0 analog input pin.
@@ -54,15 +61,14 @@ void updateAccData() {
 }
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
   accelemeter.init();
   buff[0] = 0;
   Serial.begin(9600);
-    blePeripheral.setAdvertisedServiceUuid(bleService.uuid());
-    blePeripheral.addAttribute(bleService);
-    blePeripheral.addAttribute(bleCharacteristic);
-    blePeripheral.setLocalName("Wobbly");
-    blePeripheral.begin();
+  blePeripheral.setAdvertisedServiceUuid(bleService.uuid());
+  blePeripheral.addAttribute(bleService);
+  blePeripheral.addAttribute(bleCharacteristic);
+  blePeripheral.setLocalName(DEVICE_NAME);
+  blePeripheral.begin();
 }
 
 void loop() {
