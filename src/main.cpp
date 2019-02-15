@@ -72,6 +72,30 @@ void setup() {
 }
 
 void loop() {
+int8_t x, y, z;
+float ax,ay,az;
+accelemeter.getXYZ(&x,&y,&z);
+
+Serial.print("getXYZ:	");
+	Serial.print(x);
+	Serial.print(" ");
+	Serial.print(y);
+	Serial.print(" ");
+	Serial.print(z);
+	Serial.print("\n");
+
+accelemeter.getAcceleration(&ax,&ay,&az);
+	Serial.print("getAcc: ");
+Serial.print(ax);
+Serial.print(" ");
+Serial.print(ay);
+Serial.print(" ");
+Serial.print(az);
+Serial.print("\n\n");
+delay(200);
+}
+
+void loop2() {
   // listen for BLE peripherals to connect:
   BLECentral central = blePeripheral.central();
 
